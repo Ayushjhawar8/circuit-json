@@ -17,6 +17,21 @@ export interface SourceComponentBase {
   internally_connected_source_port_ids?: string[][]
   source_group_id?: string
   subcircuit_id?: string
+  source_pin_attributes?: Record<
+    string,
+    {
+      mustBeConnected?: boolean
+      requiresPower?: boolean
+      requiresGround?: boolean
+      requiresVoltage?: string | number
+      doNotConnect?: boolean
+      includeInBoardPinout?: boolean
+      highlightColor?: string
+      providesPower?: boolean
+      providesGround?: boolean
+      providesVoltage?: string | number
+    }
+  >
 }
 
 export const source_component_base = z.object({
@@ -33,6 +48,23 @@ export const source_component_base = z.object({
   internally_connected_source_port_ids: z.array(z.array(z.string())).optional(),
   source_group_id: z.string().optional(),
   subcircuit_id: z.string().optional(),
+  source_pin_attributes: z
+    .record(
+      z.string(),
+      z.object({
+        mustBeConnected: z.boolean().optional(),
+        requiresPower: z.boolean().optional(),
+        requiresGround: z.boolean().optional(),
+        requiresVoltage: z.union([z.string(), z.number()]).optional(),
+        doNotConnect: z.boolean().optional(),
+        includeInBoardPinout: z.boolean().optional(),
+        highlightColor: z.string().optional(),
+        providesPower: z.boolean().optional(),
+        providesGround: z.boolean().optional(),
+        providesVoltage: z.union([z.string(), z.number()]).optional(),
+      }),
+    )
+    .optional(),
 })
 
 type InferredSourceComponentBase = z.infer<typeof source_component_base>
